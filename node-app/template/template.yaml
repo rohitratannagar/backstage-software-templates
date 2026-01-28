@@ -1,28 +1,34 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
-# some metadata about the template itself
 metadata:
-  name: v1beta3-demo
-  title: Test Action template
-  description: scaffolder v1beta3 template demo
+  name: URLshortener
+  title: URL Shortener Service
+  description: A basic template to bootstrap a URL shortener service.
 spec:
-  owner: backstage/techdocs-core
+  owner: development
   type: service
 
-  # these are the steps which are rendered in the frontend with the form input
+  # 1. Inputs from the user
   parameters:
-    - title: Fill in some steps
+    - title: Provide App Information
       required:
         - name
+        - owner
       properties:
         name:
           title: Name
           type: string
-          description: Unique name of the component
-          ui:autofocus: true
+          description: Name of your new Node service
+        owner:
+          title: Owner
+          type: string
+          description: Which group owns this service?
+          ui:field: OwnerPicker
           ui:options:
-            rows: 5
-    - title: Choose a location
+            catalogFilter:
+              kind: Group
+
+    - title: Choose Repository Location
       required:
         - repoUrl
       properties:
@@ -34,34 +40,37 @@ spec:
             allowedHosts:
               - github.com
 
-  # here's the steps that are executed in series in the scaffolder backend
+  # 2. Actions to perform
   steps:
-    - id: fetchBase
-      name: Fetch Base
+    - id: template
+      name: Fetch Skeleton
       action: fetch:template
       input:
-        url: ./template
+        url: ./skeleton  # Relative path to your Node.js boilerplate code
         values:
           name: ${{ parameters.name }}
-
-    - id: fetchDocs
-      name: Fetch Docs
-      action: fetch:plain
-      input:
-        targetPath: ./community
-        url: https://github.com/backstage/community/tree/main/backstage-community-sessions
+          owner: ${{ parameters.owner }}
 
     - id: publish
-      name: Publish
+      name: Publish to GitHub
       action: publish:github
       input:
-        description: This is ${{ parameters.name }}
         repoUrl: ${{ parameters.repoUrl }}
-        defaultBranch: 'main'
+        description: "URLshortenerNode.js service: ${{ parameters.name }}"
+        defaultBranch: main
 
     - id: register
-      name: Register
+      name: Register in Catalog
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
+
+  # 3. Final display links
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}
