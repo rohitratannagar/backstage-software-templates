@@ -45,8 +45,12 @@ spec:
       name: Register in Catalog
       action: catalog:register
       input:
-        repoContentsUrl: https://github.com/rohitratannagar
-        catalogInfoPath: backstage-software-templates/blob/main/node-app/template/catalog-info.yaml
+        - id: register
+  action: catalog:register
+  input:
+    repoContentsUrl: ${{ steps.publish.output.remoteUrl }}/blob/main
+    catalogInfoPath: catalog-info.yaml
+
 
 
 
