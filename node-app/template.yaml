@@ -45,10 +45,9 @@ spec:
       name: Register in Catalog
       action: catalog:register
       input:
-        # FIX: Changed from repoUrl to repoContentsUrl 
-        # We use the output from the 'publish' step to ensure the repo is ready.
-        repoContentsUrl: ${{ steps.publish.output.remoteUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
+        repoContentsUrl: https://github.com/${{ parameters.githubOwner }}/${{ parameters.name }}/blob/main
+        catalogInfoPath: catalog-info.yaml
+
 
   output:
     links:
