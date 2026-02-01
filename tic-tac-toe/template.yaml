@@ -1,0 +1,57 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: tic-tac-toe-game
+  title: Tic Tac Toe Game
+  description: Scaffold a Tic Tac Toe game with team and player selection
+spec:
+  owner: platform-team
+  type: website
+
+  parameters:
+    - title: Team & Players
+      required:
+        - owner
+        - playerOne
+        - playerTwo
+      properties:
+        owner:
+          title: Owning Team
+          type: string
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+
+        playerOne:
+          title: Player One Name
+          type: string
+
+        playerTwo:
+          title: Player Two Name
+          type: string
+
+  steps:
+    - id: fetch
+      name: Fetch Game Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          owner: ${{ parameters.owner }}
+          playerOne: ${{ parameters.playerOne }}
+          playerTwo: ${{ parameters.playerTwo }}
+
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=my-org&repo=tic-tac-toe-${{ parameters.playerOne }}
+        defaultBranch: main
+
+    - id: register
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml

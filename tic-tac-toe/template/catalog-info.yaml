@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  # Dynamically generate component name using playerOne
+  name: tic-tac-toe-${{ parameters.playerOne | lower | replace(" ", "-") }}
+  description: Tic Tac Toe game created by ${{ parameters.owner }}
+  tags:
+    - game
+    - javascript
+    - frontend
+spec:
+  type: website
+  lifecycle: experimental
+  owner: ${{ parameters.owner }}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+
+  <h1>Tic Tac Toe</h1>
+
+  <div id="setup">
+    <h3>Choose your symbols</h3>
+
+    <label>
+      {{ playerOne }} symbol:
+      <input id="symbol1" placeholder="X" maxlength="2" />
+    </label>
+
+    <label>
+      {{ playerTwo }} symbol:
+      <input id="symbol2" placeholder="O" maxlength="2" />
+    </label>
+
+    <button id="start">Start Game</button>
+    <p id="error" style="color:red;"></p>
+  </div>
+
+  <p id="status"></p>
+
+  <div class="board" style="display:none;">
+    <div class="cell" data-index="0"></div>
+    <div class="cell" data-index="1"></div>
+    <div class="cell" data-index="2"></div>
+    <div class="cell" data-index="3"></div>
+    <div class="cell" data-index="4"></div>
+    <div class="cell" data-index="5"></div>
+    <div class="cell" data-index="6"></div>
+    <div class="cell" data-index="7"></div>
+    <div class="cell" data-index="8"></div>
+  </div>
+
+  <button id="restart" style="display:none;">Restart</button>
+
+  <script>
+    const PLAYER_ONE_NAME = "{{ playerOne }}";
+    const PLAYER_TWO_NAME = "{{ playerTwo }}";
+  </script>
+
+  <script src="index.js"></script>
+</body>
+</html>
